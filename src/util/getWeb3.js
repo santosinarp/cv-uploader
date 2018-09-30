@@ -19,7 +19,7 @@ let getWeb3 = new Promise((resolve, reject) => {
       }
     })
   } else {
-    reject(new Error('You Need Metamask'))
+    reject(new Error('metamask_disabled'))
   }
 })
   .then(result => {
@@ -50,7 +50,7 @@ let getWeb3 = new Promise((resolve, reject) => {
         } else {
           // if metamask is locked
           if (typeof coinbase === 'undefined' || !coinbase) {
-            reject(new Error('Your metamask is locked, unlock it first'))
+            reject(new Error('metamask_locked'))
           } else {
             // assign address property to our result
             result = Object.assign({}, result, { coinbase })

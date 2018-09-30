@@ -14,8 +14,8 @@ import Web3 from 'web3'
 export default {
   data () {
     return {
-      opacity: 0.4,
-      displayLoadingImage: 'block'
+      opacity: 1,
+      displayLoadingImage: 'none'
     }
   },
   beforeCreate () {
@@ -23,6 +23,8 @@ export default {
     const web3js = window.web3
     
     if(typeof web3js !== 'undefined') {
+      this.opacity = 0.4,
+      this.displayLoadingImage = 'block'
       this.$store.dispatch('registerWeb3')
 
       // check change account metamask
@@ -38,10 +40,11 @@ export default {
       }, 1000);
     } else {
       // If metamask has not installed yet
+      this.$store.dispatch('registerWeb3')
     }
   },
   components: {
     AppLogin
-  }
+  },
 }
 </script>

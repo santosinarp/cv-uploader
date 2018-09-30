@@ -5,7 +5,9 @@
       <router-link to="/about">About</router-link>
     </div> -->
     <Navbar/>
-    <router-view/>
+    <v-content style="padding-bottom:160px;">
+      <router-view/>
+    </v-content>
     <Footer/>
   </div>
 </template>

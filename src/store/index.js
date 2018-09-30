@@ -20,6 +20,10 @@ export const store = new Vuex.Store({
       web3Copy.web3Instance = result.web3
       web3Copy.networkName = result.networkName
       state.web3 = web3Copy
+    },
+    registerErrorWeb3 (state, err) {
+      console.log('Error on register web3, mutation web3 errors being executed', err)
+      state.web3Error.error_message = err
     }
   },
   actions: {
@@ -29,6 +33,7 @@ export const store = new Vuex.Store({
         console.log('committing result to registerWeb3Instance mutation')
         commit('registerWeb3Instance', result)
       }).catch(e => {
+        commit('registerErrorWeb3', e.message)
         console.log('error in action registerWeb3', e)
       })
     }

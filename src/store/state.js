@@ -8,6 +8,9 @@ const state = {
     balance: null,
     error: null
   },
-  contractInstance: null
+  contractInstance: null,
+  web3Error: {
+    error_message: null
+  }
 }
 export default state

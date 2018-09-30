@@ -26,7 +26,7 @@
       </v-card-title>
 
       <v-card-actions class="grey darken-3 justify-center">
-        &copy;2018 — <strong>Vuetify</strong>
+        &copy; &nbsp; 2018 — <strong>&nbsp;Blockchain Technology Malaysia Sdn.Bhd.</strong>
       </v-card-actions>
     </v-card>
   </v-footer>
