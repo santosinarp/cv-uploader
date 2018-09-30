@@ -19,7 +19,7 @@ let getWeb3 = new Promise((resolve, reject) => {
       }
     })
   } else {
-    reject(new Error('You Need Metamask / Mist'))
+    reject(new Error('You Need Metamask'))
   }
 })
   .then(result => {

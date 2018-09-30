@@ -42,4 +42,16 @@ export default {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+#loading-img {
+	background: url("./assets/loading/loading.gif") center center no-repeat;
+    display: none;
+    height: 300px;
+    width: 300px;
+    position: absolute;
+    top: 20%;
+    left: 1%;
+    right: 1%;
+    margin: auto;
+}
 </style>
