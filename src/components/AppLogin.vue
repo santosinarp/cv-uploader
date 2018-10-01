@@ -17,52 +17,18 @@
     <v-container>
       <v-flex xs12 md8 offset-md2>
         <v-card>
-          <v-layout v-if="web3Error.error_message == 'metamask_locked'" row wrap>
-            <v-flex xs12 md8>
-              <v-card-text class="text-xs-left">
-                <h1 class="display-1 font-weight-light" style="color:#252d6b">Your Metamask is Locked</h1>
-                <br/>
-                <v-flex xs12 md8>
-                  <p class="title font-weight-thin" style="color:#5a6872">Please open your metamask and follow the instructions to unlock it</p>
-                </v-flex>
-              </v-card-text>
-            </v-flex>
-            <v-flex xs4>
-              <img alt="Metamask logo" :src="metamaskImg" />
-            </v-flex>
-          </v-layout>
 
-          <v-layout v-if="web3Error.error_message == 'metamask_disabled'"  row wrap>
-            <v-flex xs12 md8>
-              <v-card-text class="text-xs-left">
-                <h1 class="display-1 font-weight-light" style="color:#252d6b">You Need to install Metamask for Login</h1>
-                <br/>
-                <v-flex xs12 md8>
-                  <p class="title font-weight-thin" style="color:#5a6872">How to install metamask? <a target="_blank" href="https://metamask.io/">Click Here</a></p>
-                </v-flex>
-              </v-card-text>
-            </v-flex>
-            <v-flex xs4>
-              <img alt="Metamask logo" :src="metamaskImg" />
-            </v-flex>
-          </v-layout>
+          <div v-if="web3Error.error_message == 'metamask_locked'">
+            <metamask-locked></metamask-locked>
+          </div>
 
-          <v-layout v-if="signature.requestSign == '1'" row wrap>
-            <v-flex xs12 md8>
-              <v-card-text class="text-xs-left">
-                <h1 class="display-1 font-weight-light" style="color:#252d6b">Sign In with your wallet</h1>
-                <br/>
-                <v-flex xs12 md8>
-                  <p class="title font-weight-thin" style="color:#5a6872">
-                    Once you have digitally signed the verification code with your MetaMask wallet, your wallet will allow you to single-sign into your BTM account without the need for a dedicated username and password combination. This signing operation has no cost associated and can be completed by clicking on the «SIGN» button in your MetaMask.
-                  </p>
-                </v-flex>
-              </v-card-text>
-            </v-flex>
-            <v-flex xs4>
-              <img alt="Metamask logo" :src="metamaskImg" />
-            </v-flex>
-          </v-layout>
+          <div v-if="web3Error.error_message == 'metamask_disabled'">
+            <metamask-disabled></metamask-disabled>
+          </div>
+
+          <div v-if="signature.requestSign == '1'">
+            <metamask-sign></metamask-sign>
+          </div>
 
         </v-card>
       </v-flex>
@@ -78,12 +44,21 @@
 
 <script>
 import AuthService from '@/services/AuthService'
+import MetamaskDisabled from '@/components/MetamaskDisabled'
+import MetamaskLocked from '@/components/MetamaskLocked'
+import MetamaskSign from '@/components/MetamaskSign'
 
 export default {
   data () {
     return {
       metamaskImg: require("../assets/metamask.png")
     }
+  },
+
+  components: {
+    MetamaskDisabled,
+    MetamaskLocked,
+    MetamaskSign
   },
 
   computed: {

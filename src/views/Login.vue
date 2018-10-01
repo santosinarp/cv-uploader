@@ -35,34 +35,41 @@ export default {
           const publicAddress = responseUserDetail.data.returns[0].public_address
 
           // send request sign to metamask
-          this.$store.dispatch('sendRequestSign',1)
+          this.$store.dispatch('sendRequestSign', 1)
+
+          // wait until user sign or cancel
           const signature = await this.signNonce(publicAddress, nonce)
           
-          
-          // authenticate the signature
+          // if sign, then authenticate the signature 
+          // if cancel then automatically throw to catch
           const doAuthenticate = await this.authenticate(signature.publicAddress, signature.signature)
 
           if(typeof doAuthenticate.data !== 'undefined') {
             if(doAuthenticate.data.returns === 'signed') {
+              // if user signed
               alert('Success signed')
+
             }
           } else {
             alert('Cannot authenticate your credentials')
           }
         } else {
           // if user not exists then create the users
-          this.registerUser()
-          location.reload()
+          // and if coinbase != null ( metamask is unlocked )
+          if(this.$store.state.web3.coinbase){
+            this.registerUser()
+            location.reload()
+          }
         }
       } catch (err) {
         if(err.message === 'Error: MetaMask Message Signature: User denied message signature.'){
+          // check if user cancel the sign
           alert('You have cancelled the signature')
+        }else if(err.message === 'Request failed with status code 401') {
+          // wrong signature
+          alert('Your signature is not match')
         }else {
-          if(err.message === 'Request failed with status code 401') {
-            alert('Your signature is not match')
-          }else {
-            alert('Oops... Something went wrong while retreiving your data')
-          }
+          alert('Oops... Something went wrong while retreiving your data')
         }
       }
 
@@ -108,11 +115,14 @@ export default {
       return new Promise(async (resolve, reject) => {
         try{
           let responseAuthenticate = await AuthService.authenticate(publicAddress, signature)
+
+          // if signature wrong, then throw to catch
+          // if signature true, then change the MetamaskSign state
+          this.$store.dispatch('sendRequestSign', 0)
           return resolve(responseAuthenticate)
         } catch (err) {
           return reject(err)
         }
-        
       })
     }
 

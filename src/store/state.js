@@ -13,7 +13,10 @@ const state = {
     error_message: null
   },
   signature: {
-    requestSign: false
+    // to determine wether user has active request to be signed or not
+    requestSign: false,
+    // to determine wether user has active signature or not
+    signed: false
   }
 }
 export default state

@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import state from './state'
 import getWeb3 from '../util/getWeb3'
-import { request } from 'http';
 
 Vue.use(Vuex)
 
@@ -31,7 +30,14 @@ export const store = new Vuex.Store({
     * if false, means that no request sign, and vice versa
     */
     sendRequestSignInstance (state, requestSign) {
+      // remember that value of requestSign and signed must be opposite
       state.signature.requestSign = requestSign
+      if (requestSign) {
+        var signed = 0
+      } else {
+        signed = 1
+      }
+      state.signature.signed = signed
     }
   },
   actions: {
@@ -47,7 +53,7 @@ export const store = new Vuex.Store({
         })
       })
     },
-    sendRequestSign :( context, requestSign ) => {
+    sendRequestSign: (context, requestSign) => {
       return new Promise((resolve) => {
         resolve(context.commit('sendRequestSignInstance', requestSign))
       })
