@@ -11,6 +11,9 @@ const state = {
   contractInstance: null,
   web3Error: {
     error_message: null
+  },
+  signature: {
+    requestSign: false
   }
 }
 export default state

@@ -66,9 +66,9 @@ export default {
             drawer: null,
             items: [
                 { title: 'Home', icon: 'dashboard', url: '/' },
-                { title: 'About', icon: 'question_answer', url: '/about' },
-                { title: 'Login', icon: 'exit_to_app', url: '/login' },
-                { title: 'register', icon: 'account_circle', url: '/register' }
+                // { title: 'About', icon: 'question_answer', url: '/about' },
+                { title: 'Upload CV', icon: 'exit_to_app', url: '/login' },
+                // { title: 'register', icon: 'account_circle', url: '/register' }
             ]
         }
     }

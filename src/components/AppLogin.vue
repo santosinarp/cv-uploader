@@ -46,6 +46,24 @@
               <img alt="Metamask logo" :src="metamaskImg" />
             </v-flex>
           </v-layout>
+
+          <v-layout v-if="signature.requestSign == '1'" row wrap>
+            <v-flex xs12 md8>
+              <v-card-text class="text-xs-left">
+                <h1 class="display-1 font-weight-light" style="color:#252d6b">Sign In with your wallet</h1>
+                <br/>
+                <v-flex xs12 md8>
+                  <p class="title font-weight-thin" style="color:#5a6872">
+                    Once you have digitally signed the verification code with your MetaMask wallet, your wallet will allow you to single-sign into your BTM account without the need for a dedicated username and password combination. This signing operation has no cost associated and can be completed by clicking on the «SIGN» button in your MetaMask.
+                  </p>
+                </v-flex>
+              </v-card-text>
+            </v-flex>
+            <v-flex xs4>
+              <img alt="Metamask logo" :src="metamaskImg" />
+            </v-flex>
+          </v-layout>
+
         </v-card>
       </v-flex>
       <!-- <p>Metamask: {{ web3.isInjected}} </p>
@@ -59,6 +77,8 @@
 
 
 <script>
+import AuthService from '@/services/AuthService'
+
 export default {
   data () {
     return {
@@ -72,7 +92,15 @@ export default {
     },
     web3Error () {
       return this.$store.state.web3Error
+    },
+    signature () {
+      return this.$store.state.signature
     }
-  }
+  },
+
+  async created () {
+  
+  },
+  
 }
 </script>

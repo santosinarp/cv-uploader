@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import state from './state'
 import getWeb3 from '../util/getWeb3'
+import { request } from 'http';
 
 Vue.use(Vuex)
 
@@ -24,17 +25,31 @@ export const store = new Vuex.Store({
     registerErrorWeb3 (state, err) {
       console.log('Error on register web3, mutation web3 errors being executed', err)
       state.web3Error.error_message = err
+    },
+
+    /* mutation to change the value of requestSign (boolean (1/0))
+    * if false, means that no request sign, and vice versa
+    */
+    sendRequestSignInstance (state, requestSign) {
+      state.signature.requestSign = requestSign
     }
   },
   actions: {
     registerWeb3 ({ commit }) {
       console.log('registerWeb3 Action being executed')
-      getWeb3.then(result => {
-        console.log('committing result to registerWeb3Instance mutation')
-        commit('registerWeb3Instance', result)
-      }).catch(e => {
-        commit('registerErrorWeb3', e.message)
-        console.log('error in action registerWeb3', e)
+      return new Promise((resolve) => {
+        getWeb3.then(result => {
+          console.log('committing result to registerWeb3Instance mutation')
+          resolve(commit('registerWeb3Instance', result))
+        }).catch(e => {
+          resolve(commit('registerErrorWeb3', e.message))
+          console.log('error in action registerWeb3', e)
+        })
+      })
+    },
+    sendRequestSign :( context, requestSign ) => {
+      return new Promise((resolve) => {
+        resolve(context.commit('sendRequestSignInstance', requestSign))
       })
     }
   }

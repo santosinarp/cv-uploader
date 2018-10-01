@@ -10,6 +10,7 @@
 <script>
 import AppLogin from '@/components/AppLogin.vue'
 import Web3 from 'web3'
+import AuthService from '@/services/AuthService'
 
 export default {
   data () {
@@ -18,14 +19,52 @@ export default {
       displayLoadingImage: 'none'
     }
   },
-  beforeCreate () {
+  async beforeCreate () {
     console.log('registerWeb3 Action dispatched from this page')
     const web3js = window.web3
     
     if(typeof web3js !== 'undefined') {
       this.opacity = 0.4,
       this.displayLoadingImage = 'block'
-      this.$store.dispatch('registerWeb3')
+  
+      const dispatchRegisterWeb3 = await this.$store.dispatch('registerWeb3')
+      try{
+        let responseUserDetail = await AuthService.getUserDetail(this.$store.state.web3.coinbase)
+        if(responseUserDetail.data.returns.length) {
+          const nonce = responseUserDetail.data.returns[0].nonce
+          const publicAddress = responseUserDetail.data.returns[0].public_address
+
+          // send request sign to metamask
+          this.$store.dispatch('sendRequestSign',1)
+          const signature = await this.signNonce(publicAddress, nonce)
+          
+          
+          // authenticate the signature
+          const doAuthenticate = await this.authenticate(signature.publicAddress, signature.signature)
+
+          if(typeof doAuthenticate.data !== 'undefined') {
+            if(doAuthenticate.data.returns === 'signed') {
+              alert('Success signed')
+            }
+          } else {
+            alert('Cannot authenticate your credentials')
+          }
+        } else {
+          // if user not exists then create the users
+          this.registerUser()
+          location.reload()
+        }
+      } catch (err) {
+        if(err.message === 'Error: MetaMask Message Signature: User denied message signature.'){
+          alert('You have cancelled the signature')
+        }else {
+          if(err.message === 'Request failed with status code 401') {
+            alert('Your signature is not match')
+          }else {
+            alert('Oops... Something went wrong while retreiving your data')
+          }
+        }
+      }
 
       // check change account metamask
       var account = web3.eth.accounts[0];
@@ -42,6 +81,41 @@ export default {
       // If metamask has not installed yet
       this.$store.dispatch('registerWeb3')
     }
+  },
+  methods : {
+    async registerUser () {
+      try{
+        let responseRegisterUser = await AuthService.registerUser(this.$store.state.web3.coinbase)
+        return responseRegisterUser
+      } catch(err) {
+        return err
+      }
+    },
+
+    signNonce(publicAddress, nonce) {
+      return new Promise((resolve, reject) => {
+        // Send signature request
+        web3.personal.sign(web3.fromUtf8(`Please sign this your one time password: ${nonce}`), 
+        publicAddress,
+        (err, signature) => {
+          if(err) return reject(err)
+          return resolve({publicAddress, signature})
+        });
+      })
+    },
+
+    authenticate(publicAddress, signature) {
+      return new Promise(async (resolve, reject) => {
+        try{
+          let responseAuthenticate = await AuthService.authenticate(publicAddress, signature)
+          return resolve(responseAuthenticate)
+        } catch (err) {
+          return reject(err)
+        }
+        
+      })
+    }
+
   },
   components: {
     AppLogin
